@@ -1,4 +1,5 @@
-import React, { useState, MouseEvent } from "react";
+"use client";
+import React, { MouseEvent } from "react";
 import useCreateSession from "@/hooks/useCreateSession";
 
 const CreateButton = ({ code }: { code: string }) => {
@@ -12,8 +13,10 @@ const CreateButton = ({ code }: { code: string }) => {
   return (
     <div>
       <button onClick={handleClick} disabled={loading || !code}>
-        "Create"
+        Create
       </button>
     </div>
   );
 };
+
+export default CreateButton;
