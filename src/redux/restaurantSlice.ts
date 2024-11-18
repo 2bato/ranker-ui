@@ -1,21 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Restaurant {
-  id: number;
-  name: string;
-  location: string;
-  photo_url: string;
-  rank?: number;
-  overall_rank?: number;
-}
+import { Restaurant } from "@/models/restaurant";
 
 interface RestaurantState {
-  restaurants: Restaurant[];
+  active_restaurants: Restaurant[];
   vetoed: number[];
 }
 
 const initialState: RestaurantState = {
-  restaurants: [],
+  active_restaurants: [
+    { id: 1, name: "r1", location: "??", photo_url: "??" },
+    { id: 2, name: "r2", location: "??", photo_url: "??" },
+  ],
   vetoed: [],
 };
 
@@ -24,7 +19,7 @@ const restaurantSlice = createSlice({
   initialState,
   reducers: {
     setRestaurants: (state, action: PayloadAction<Restaurant[]>) => {
-      state.restaurants = action.payload;
+      state.active_restaurants = action.payload;
     },
     addVetoedRestaurant: (state, action: PayloadAction<number>) => {
       if (!state.vetoed.includes(action.payload)) {
@@ -38,7 +33,7 @@ const restaurantSlice = createSlice({
       state,
       action: PayloadAction<{ restaurantId: number; rank: number }>
     ) => {
-      const restaurant = state.restaurants.find(
+      const restaurant = state.active_restaurants.find(
         (r) => r.id === action.payload.restaurantId
       );
       if (restaurant) {
@@ -53,7 +48,7 @@ const restaurantSlice = createSlice({
       action: PayloadAction<{ [restaurantId: number]: number }>
     ) => {
       Object.entries(action.payload).forEach(([restaurantId, overall_rank]) => {
-        const restaurant = state.restaurants.find(
+        const restaurant = state.active_restaurants.find(
           (r) => r.id === Number(restaurantId)
         );
         if (restaurant) {
