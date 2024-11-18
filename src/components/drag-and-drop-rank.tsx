@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useCallback } from "react";
 import {
   closestCenter,
@@ -26,6 +27,7 @@ const DragAndDropRank = () => {
     (state: any) => state.restaurants.active_restaurants
   );
 
+  const [mounted, setMounted] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [reorderedRestaurants, setReorderedRestaurants] = useState<
     Restaurant[]
@@ -39,6 +41,10 @@ const DragAndDropRank = () => {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (reorderedRestaurants.length > 0) {
@@ -64,6 +70,7 @@ const DragAndDropRank = () => {
           restaurantIds.indexOf(active.id),
           restaurantIds.indexOf(over.id)
         );
+
         const updatedRestaurants = newOrder.map((id) =>
           restaurants.find((r: Restaurant) => r.id === id)
         );
@@ -75,6 +82,10 @@ const DragAndDropRank = () => {
     },
     [restaurantIds, restaurants]
   );
+
+  if (!mounted) {
+    return null; 
+  }
 
   return (
     <div style={{ touchAction: "none" }}>
