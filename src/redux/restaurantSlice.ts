@@ -8,8 +8,8 @@ interface RestaurantState {
 
 const initialState: RestaurantState = {
   active_restaurants: [
-    { id: 1, name: "r1", location: "??", photo_url: "??" },
-    { id: 2, name: "r2", location: "??", photo_url: "??" },
+    { id: 1, name: "r1", location: "??", photo_url: "??", rating: 5 },
+    { id: 2, name: "r2", location: "??", photo_url: "??", rating: 2 },
   ],
   vetoed: [],
 };

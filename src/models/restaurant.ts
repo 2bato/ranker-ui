@@ -3,6 +3,7 @@ export interface Restaurant {
   name: string;
   location: string;
   photo_url: string;
+  rating: number;
   rank?: number;
   overall_rank?: number;
 }
