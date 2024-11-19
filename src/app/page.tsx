@@ -4,6 +4,8 @@ import { store } from "@/redux/store";
 import CreateButton from "@/components/create-button";
 import JoinButton from "@/components/join-button";
 import { useState } from "react"; // Import useState for handling input state
+import DragAndDropRank from "@/components/drag-and-drop-rank";
+import Deck from "@/components/swipe-veto";
 
 export default function Home() {
   const [code, setCode] = useState<string>(""); // State to hold the code input
@@ -14,6 +16,8 @@ export default function Home() {
 
   return (
     <Provider store={store}>
+      <Deck></Deck>
+
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div>
           <input
@@ -27,6 +31,7 @@ export default function Home() {
           <CreateButton code={code} />
           <JoinButton code={code} />
         </div>
+        <DragAndDropRank />
       </main>
     </Provider>
   );

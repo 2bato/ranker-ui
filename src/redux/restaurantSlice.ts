@@ -38,7 +38,7 @@ const initialState: RestaurantState = {
       rating: 2,
       veto: false,
     },{
-      id: 5,
+      id: 25,
       name: "r5",
       location: "??",
       photo_url: "??",

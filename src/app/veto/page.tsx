@@ -2,8 +2,9 @@
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { useSearchParams } from "next/navigation";
-import RestaurantList from "@/components/restaurant-test";
 import { useRouter } from "next/navigation";
+import RestaurantCardSwipe from "@/components/swipe-veto";
+import Deck from "@/components/ex";
 
 const VetoPage = () => {
   const searchParams = useSearchParams();
@@ -15,8 +16,8 @@ const VetoPage = () => {
       <div>
         <h1>Veto Page</h1>
         {code ? <p>Session Code: {code}</p> : <p>Session Code is missing</p>}
-        <RestaurantList />
       </div>
+      <Deck></Deck>
     </Provider>
   );
 };
