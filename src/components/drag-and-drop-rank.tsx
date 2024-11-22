@@ -84,7 +84,7 @@ const DragAndDropRank = () => {
   );
 
   if (!mounted) {
-    return null; 
+    return null;
   }
 
   return (

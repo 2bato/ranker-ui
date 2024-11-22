@@ -14,7 +14,7 @@ const initialState: RestaurantState = {
       location: "??",
       photo_url: "??",
       rating: 5,
-      veto: false,
+      veto: 0,
     },
     {
       id: 2,
@@ -22,28 +22,31 @@ const initialState: RestaurantState = {
       location: "??",
       photo_url: "??",
       rating: 2,
-      veto: false,
-    },{
+      veto: 0,
+    },
+    {
       id: 3,
       name: "r3",
       location: "??",
       photo_url: "??",
       rating: 2,
-      veto: false,
-    },{
+      veto: 0,
+    },
+    {
       id: 4,
       name: "r4",
       location: "??",
       photo_url: "??",
       rating: 2,
-      veto: false,
-    },{
+      veto: 0,
+    },
+    {
       id: 25,
       name: "r5",
       location: "??",
       photo_url: "??",
       rating: 2,
-      veto: false,
+      veto: 0,
     },
   ],
   vetoed: [],
@@ -63,12 +66,15 @@ const restaurantSlice = createSlice({
           (r) => r.id === action.payload
         );
         if (restaurant) {
-          restaurant.veto = true;
+          restaurant.veto += 1;
         }
       }
     },
     removeVetoedRestaurants: (state, action: PayloadAction<number>) => {
       state.vetoed = state.vetoed.filter((id) => id !== action.payload);
+    },
+    clearVetoed: (state) => {
+      state.vetoed = [];
     },
     setUserRank: (
       state,
@@ -80,9 +86,6 @@ const restaurantSlice = createSlice({
       if (restaurant) {
         restaurant.rank = action.payload.rank;
       }
-    },
-    setVetoedRestaurants: (state, action: PayloadAction<number[]>) => {
-      state.vetoed = action.payload;
     },
     setOverallRank: (
       state,
@@ -106,7 +109,7 @@ export const {
   removeVetoedRestaurants,
   setUserRank,
   setOverallRank,
-  setVetoedRestaurants,
+  clearVetoed,
 } = restaurantSlice.actions;
 
 export default restaurantSlice.reducer;

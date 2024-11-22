@@ -1,7 +1,6 @@
 import { Restaurant } from "@/models/restaurant";
 import React, { forwardRef } from "react";
-
-// You can import an external library to display stars, e.g., 'react-icons' or a custom star system.
+import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 
 interface ItemProps {
@@ -61,10 +60,13 @@ export const RestaurantCardDND = forwardRef<HTMLDivElement, ItemProps>(
 
     return (
       <div {...props} ref={ref} style={cardStyle}>
-        <img
-          src={restaurant.photo_url || "/default-image.jpg"} // Default fallback image if photo_url is not provided
+        <Image
+          src={restaurant.photo_url || "/default-image.jpg"}
           alt={restaurant.name}
-          style={imageStyle}
+          layout="fill"
+          objectFit="cover"
+          quality={75}
+          sizes="100px"
         />
         <div style={{ flex: 1 }}>
           <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "600" }}>
@@ -82,5 +84,7 @@ export const RestaurantCardDND = forwardRef<HTMLDivElement, ItemProps>(
     );
   }
 );
+
+RestaurantCardDND.displayName = "RestaurantCardDND";
 
 export default React.memo(RestaurantCardDND);

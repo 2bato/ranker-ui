@@ -4,7 +4,7 @@ export interface Restaurant {
   location: string;
   photo_url: string;
   rating: number;
-  veto: boolean;
+  veto: number;
   rank?: number;
   overall_rank?: number;
 }
