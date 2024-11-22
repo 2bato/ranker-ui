@@ -1,31 +1,33 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSprings, animated, to as interpolate } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 import { useDispatch, useSelector } from "react-redux";
-import RestaurantCardSwipe from "@/components/restaurant-card-swipe"; // Import the RestaurantCardSwipe component
+import RestaurantCardSwipe from "@/components/restaurant-card-swipe";
 import { Restaurant } from "@/models/restaurant";
 import { vetoRestaurant } from "@/redux/restaurantSlice";
+import useVeto from "@/hooks/useVeto";
 
-// SwipeVeto component for restaurant cards
 const SwipeVeto = () => {
   const dispatch = useDispatch();
   const restaurants: Restaurant[] = useSelector(
     (state: any) => state.restaurants.active_restaurants
   );
+  const { submitAndFetchVeto, loading, error } = useVeto();
   const [gone, setGone] = useState(new Set()); // Track flicked-out cards
+  const [flashColor, setFlashColor] = useState<string | null>(null); // Track screen flash color
 
   const to = (i: number) => ({
     x: 0,
-    y: i * -4, // Cards stacked vertically with a little offset
-    scale: 1, // Set scale to 1 initially to avoid the "too big" issue
-    rot: Math.sin(i * 20) * 6, // Random rotation only on client-side
+    y: i * -4,
+    scale: 1,
+    rot: Math.sin(i * 20) * 6,
     delay: i * 100,
   });
 
   const from = (_i: number) => ({
     x: 0,
-    y: _i * -4, // Cards stacked vertically with a little offset
-    scale: 1, // Set scale to 1 initially to avoid the "too big" issue
+    y: _i * -4,
+    scale: 1,
     rot: Math.sin(_i * 20) * 6,
   });
 
@@ -47,10 +49,20 @@ const SwipeVeto = () => {
       direction: [xDir],
       velocity: [vx],
     }) => {
-      const trigger = vx > 0.2;
+      const trigger = vx > 0.2; // Trigger only if the swipe is fast enough
+      const isLeftSwipe = xDir === -1;
+      const isRightSwipe = xDir === 1;
+
       if (!active && trigger) {
-        dispatch(vetoRestaurant(restaurants[index].id));
-        console.log(restaurants[index].id);
+        setFlashColor(isLeftSwipe ? "red" : "green");
+
+        setTimeout(() => setFlashColor(null), 200);
+
+        if (isLeftSwipe) {
+          dispatch(vetoRestaurant(restaurants[index].id));
+        } else if (isRightSwipe) {
+        }
+
         gone.add(index);
         setGone(new Set(gone));
       }
@@ -59,8 +71,7 @@ const SwipeVeto = () => {
         if (index !== i) return;
         const isGone = gone.has(index);
 
-        const x = isGone ? (window.innerWidth + 200) * xDir : active ? mx : 0;
-
+        const x = isGone ? (window.innerWidth + 120) * xDir : active ? mx : 0;
         const rot = mx / 100 + (isGone ? xDir * 10 * vx : 0);
         const scale = active ? 1.1 : 1;
 
@@ -78,12 +89,27 @@ const SwipeVeto = () => {
           setGone(new Set());
           api.start((i) => to(i));
         }, 600);
+        setTimeout(() => {
+          submitAndFetchVeto();
+        }, 3200);
       }
     }
   );
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="relative flex justify-center items-center min-h-screen bg-gray-100">
+      {flashColor && (
+        <div
+          className={`absolute inset-0 ${
+            flashColor === "red" ? "bg-red-500" : "bg-green-500"
+          } opacity-20`}
+          style={{
+            transition: "opacity 0.3s ease",
+            zIndex: 10,
+          }}
+        />
+      )}
+
       <div
         className="relative w-screen h-96 overflow-hidden flex justify-center items-center"
         style={{ position: "relative" }}
