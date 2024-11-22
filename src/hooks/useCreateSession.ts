@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setRestaurants } from "@/redux/restaurantSlice";
+import { clearVetoed, setRestaurants } from "@/redux/restaurantSlice";
 import { useDispatch } from "react-redux";
-import { setSessionCode } from "@/redux/sessionSlice";
+import { setSessionCode, setUsername } from "@/redux/sessionSlice";
 
 const useCreateSession = () => {
   const [data, setData] = useState(null);
@@ -11,9 +11,14 @@ const useCreateSession = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const createSession = async (code: string) => {
+  const createSession = async (code: string, username: string) => {
     if (!code) {
       setError("Code is required");
+      return;
+    }
+
+    if (!username) {
+      setError("Username is required");
       return;
     }
 
@@ -32,7 +37,7 @@ const useCreateSession = () => {
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ code, latitude, longitude }),
+                body: JSON.stringify({ username, code, latitude, longitude }),
               }
             );
 
@@ -47,6 +52,9 @@ const useCreateSession = () => {
 
             dispatch(setRestaurants(restaurants));
             dispatch(setSessionCode(code));
+            dispatch(setUsername(username));
+            dispatch(clearVetoed());
+
             router.push(`/veto?code=${code}`);
           } catch (err: any) {
             setError(err.message);

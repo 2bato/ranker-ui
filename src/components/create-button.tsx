@@ -2,12 +2,18 @@
 import React, { MouseEvent } from "react";
 import useCreateSession from "@/hooks/useCreateSession";
 
-const CreateButton = ({ code }: { code: string }) => {
+const CreateButton = ({
+  code,
+  username,
+}: {
+  code: string;
+  username: string;
+}) => {
   const { createSession, data, loading, error } = useCreateSession();
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    createSession(code);
+    createSession(code, username);
   };
 
   return (

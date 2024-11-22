@@ -2,12 +2,12 @@
 import React, { MouseEvent } from "react";
 import useJoinSession from "@/hooks/useJoinSession";
 
-const JoinButton = ({ code }: { code: string }) => {
+const JoinButton = ({ code, username }: { code: string; username: string }) => {
   const { joinSession, data, loading, error } = useJoinSession();
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    joinSession(code);
+    joinSession(code, username);
   };
 
   return (

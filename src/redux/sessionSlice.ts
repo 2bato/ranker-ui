@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface SessionState {
   sessionCode: string | null;
+  username: string | null;
 }
 
 const initialState: SessionState = {
   sessionCode: null,
+  username: null,
 };
 
 const sessionSlice = createSlice({
@@ -18,9 +20,16 @@ const sessionSlice = createSlice({
     clearSessionCode: (state) => {
       state.sessionCode = null;
     },
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+    },
+    clearUsername: (state) => {
+      state.username = null;
+    },
   },
 });
 
-export const { setSessionCode, clearSessionCode } = sessionSlice.actions;
+export const { setSessionCode, clearSessionCode, setUsername, clearUsername } =
+  sessionSlice.actions;
 
 export default sessionSlice.reducer;

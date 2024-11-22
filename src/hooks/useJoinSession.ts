@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setRestaurants } from "@/redux/restaurantSlice";
 import { useDispatch } from "react-redux";
-import { setSessionCode } from "@/redux/sessionSlice";
+import { setSessionCode, setUsername } from "@/redux/sessionSlice";
 
 const useJoinSession = () => {
   const [data, setData] = useState(null);
@@ -11,9 +11,14 @@ const useJoinSession = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const joinSession = async (code: string) => {
+  const joinSession = async (code: string, username: string) => {
     if (!code) {
       setError("Code is required");
+      return;
+    }
+
+    if (!username) {
+      setError("Username is required");
       return;
     }
 
@@ -22,12 +27,13 @@ const useJoinSession = () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/sessions/${code}`,
+        `http://127.0.0.1:8000/api/sessions/${code}/join/`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({ username }),
         }
       );
 
@@ -38,11 +44,11 @@ const useJoinSession = () => {
       const result = await response.json();
       setData(result);
 
-      const { restaurants } = result;
+      const { restaurants, vetoed } = result;
 
       dispatch(setRestaurants(restaurants));
       dispatch(setSessionCode(code));
-
+      dispatch(setUsername(username));
       router.push(`/veto?code=${code}`);
     } catch (err: any) {
       setError(err.message);
