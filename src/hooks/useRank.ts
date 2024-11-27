@@ -1,14 +1,12 @@
 import { RootState } from "@/redux/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { setRestaurants } from "@/redux/restaurantSlice";
 
 export const useRank = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const dispatch = useDispatch();
   const restaurants = useSelector(
     (state: RootState) => state.restaurants.active_restaurants
   );
@@ -41,10 +39,6 @@ export const useRank = () => {
       if (!response.ok) {
         throw new Error("Failed to veto restaurants.");
       }
-
-      const data = await response.json();
-
-      dispatch(setRestaurants(data.restaurants));
       router.replace(`/result?code=${code}`);
     } catch (err: any) {
       setError(err.message);
