@@ -23,9 +23,14 @@ import { Restaurant } from "@/models/restaurant";
 
 const DragAndDropRank = () => {
   const dispatch = useDispatch();
-  const restaurants = useSelector(
-    (state: any) => state.restaurants.active_restaurants
-  );
+  const restaurants = useSelector((state: any) => {
+    const activeRestaurants = state.restaurants.active_restaurants;
+    return activeRestaurants
+      ? activeRestaurants.filter(
+          (restaurant: Restaurant) => restaurant.veto === 0
+        )
+      : [];
+  });
 
   const [mounted, setMounted] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -43,8 +48,16 @@ const DragAndDropRank = () => {
   );
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      setMounted(true);
+      const initialOrder = restaurants;
+      setReorderedRestaurants(initialOrder);
+
+      initialOrder.forEach((restaurant: Restaurant, index: number) => {
+        dispatch(setUserRank({ restaurantId: restaurant.id, rank: index + 1 }));
+      });
+    }
+  }, [mounted, restaurants, dispatch]);
 
   useEffect(() => {
     if (reorderedRestaurants.length > 0) {
@@ -53,6 +66,7 @@ const DragAndDropRank = () => {
       reorderedRestaurants.forEach((restaurant, index) => {
         dispatch(setUserRank({ restaurantId: restaurant.id, rank: index + 1 }));
       });
+      console.log(reorderedRestaurants);
     }
   }, [reorderedRestaurants, dispatch]);
 

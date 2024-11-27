@@ -27,15 +27,6 @@ export const RestaurantCardDND = forwardRef<HTMLDivElement, ItemProps>(
       ...style,
     };
 
-    const imageStyle: React.CSSProperties = {
-      width: "100px",
-      height: "100px",
-      marginRight: "15px",
-      borderRadius: "8px",
-      objectFit: "cover", // Ensures the image covers the space without distortion
-    };
-
-    // Function to render stars based on the rating
     const renderRatingStars = (rating: number) => {
       const stars = [];
       const fullStars = Math.floor(rating);
@@ -60,14 +51,15 @@ export const RestaurantCardDND = forwardRef<HTMLDivElement, ItemProps>(
 
     return (
       <div {...props} ref={ref} style={cardStyle}>
-        <Image
-          src={restaurant.photo_url || "/default-image.jpg"}
+        {/* <Image
+          src={
+            `https://places.googleapis.com/v1/${restaurant.photo_url}/media?maxHeightPx=400&maxWidthPx=400&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}` ||
+            "/default-image.jpg"
+          }
           alt={restaurant.name}
-          layout="fill"
-          objectFit="cover"
-          quality={75}
-          sizes="100px"
-        />
+          width={100}
+          height={100}
+        /> */}
         <div style={{ flex: 1 }}>
           <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "600" }}>
             {restaurant.name}
@@ -75,7 +67,6 @@ export const RestaurantCardDND = forwardRef<HTMLDivElement, ItemProps>(
           <div style={{ fontSize: "14px", color: "#555" }}></div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <span style={{ marginRight: "5px", fontSize: "16px" }}>
-              Rating:
             </span>
             <div>{renderRatingStars(restaurant.rating || 0)}</div>
           </div>
