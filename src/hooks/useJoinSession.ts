@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setRestaurants } from "@/redux/restaurantSlice";
 import { useDispatch } from "react-redux";
-import { setSessionCode, setUsername } from "@/redux/sessionSlice";
 
 const useJoinSession = () => {
   const [data, setData] = useState(null);
@@ -47,9 +46,11 @@ const useJoinSession = () => {
       const { restaurants, vetoed } = result;
 
       dispatch(setRestaurants(restaurants));
-      dispatch(setSessionCode(code));
-      dispatch(setUsername(username));
-      router.push(`/veto?code=${code}`);
+      const queryString = new URLSearchParams({
+        code,
+        username,
+      }).toString();
+      router.replace(`/veto?${queryString}`);
     } catch (err: any) {
       setError(err.message);
     } finally {

@@ -7,7 +7,7 @@ import { Restaurant } from "@/models/restaurant";
 import { vetoRestaurant } from "@/redux/restaurantSlice";
 import useVeto from "@/hooks/useVeto";
 
-const SwipeVeto = () => {
+const SwipeVeto = ({ code, username }: { code: string; username: string }) => {
   const dispatch = useDispatch();
   const restaurants: Restaurant[] = useSelector(
     (state: any) => state.restaurants.active_restaurants
@@ -90,7 +90,7 @@ const SwipeVeto = () => {
           api.start((i) => to(i));
         }, 600);
         setTimeout(() => {
-          submitAndFetchVeto();
+          submitAndFetchVeto(code, username);
         }, 3200);
       }
     }

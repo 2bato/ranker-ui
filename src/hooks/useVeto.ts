@@ -9,12 +9,10 @@ export const useVeto = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const code = useSelector((state: RootState) => state.session.sessionCode);
-  const username = useSelector((state: RootState) => state.session.username);
   const vetoedRestaurantIds = useSelector(
     (state: RootState) => state.restaurants.vetoed
   );
-  const submitAndFetchVeto = async () => {
+  const submitAndFetchVeto = async (code: string, username: string) => {
     setLoading(true);
     setError(null);
     console.log(vetoedRestaurantIds);
@@ -29,6 +27,7 @@ export const useVeto = () => {
           body: JSON.stringify({
             vetoed_restaurants: vetoedRestaurantIds,
             username: username,
+            session_code: code,
           }),
         }
       );
@@ -40,7 +39,11 @@ export const useVeto = () => {
       const data = await response.json();
 
       dispatch(setRestaurants(data.restaurants));
-      router.push(`/rank?code=${code}`);
+      const queryString = new URLSearchParams({
+        code,
+        username,
+      }).toString();
+      router.replace(`/rank?${queryString}`);
     } catch (err: any) {
       setError(err.message);
     } finally {
